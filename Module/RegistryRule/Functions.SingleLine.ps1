@@ -318,14 +318,9 @@ function Get-RegistryValueNameFromSingleLineStig
         [psobject]
         $CheckContent
     )
-    # try
-    # {
+ 
         $regValueName = $Script:SingleLineRegistryValueName.GetEnumerator() | ForEach-Object { Get-RegistryValueNameFromSLStig -CheckContent $CheckContent -Hashtable $_ }
-    # }
-    # catch
-    # {
-    #     return
-    # }
+
     return $regValueName[0]
 }
 <#
