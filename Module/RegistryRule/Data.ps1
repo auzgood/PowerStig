@@ -65,11 +65,6 @@ data testExpression
 
 $SingleLineRegistryPath = 
      [ordered]@{
-        Root     = [ordered]@{ 
-                        Match    = '(HKCU|HKLM|HKEY_LOCAL_MACHINE)\\'; 
-                        Select   = '((HKLM|HKCU|HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER).*)' 
-                    };
-
         Criteria = [ordered]@{ 
                         Contains = 'Criteria:'; 
                         After    = [ordered]@{ 
@@ -82,11 +77,16 @@ $SingleLineRegistryPath =
                                         Select = '((HKLM|HKCU).*(?=\sis))'
                                     } 
                     };
-
+        
+        Root     = [ordered]@{ 
+                    Match    = '(HKCU|HKLM|HKEY_LOCAL_MACHINE)\\'; 
+                    Select   = '((HKLM|HKCU|HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER).*)' 
+                };
+        
         Verify = [ordered]@{ 
-                        Contains = 'Verify'; 
-                        Select   = '((HKLM|HKCU).*(?=Verify))'
-                  };
+                    Contains = 'Verify'; 
+                    Select   = '((HKLM|HKCU).*(?=Verify))'
+              };
     }
 
 $SingleLineRegistryValueName = 
@@ -102,19 +102,19 @@ $SingleLineRegistryValueName =
 
 $SingleLineRegistryValueType = 
      [ordered]@{
-     One = @{ Select = '(?<={0}(\"")? is not ).*=' }; #$([regex]::escape($myString))
-     Two = @{ Select =  '(?<="{0}"\sis).*='}; #'(?<={0}(\"")?\s+is ).*=' }; 
+     One = @{ Select = '(?<={0}(") is not).*=' }; #'(?<={0}(\"")? is not ).*=' #$([regex]::escape($myString))
+     Two = @{ Select =  '({0}"?\sis (?!not))(.*=)'; Group = 2 }; #'(?<={0}(")\sis).*='}; #'(?<={0}(\"")?\s+is ).*=' }; 
      #'(?<={0}(\"")?\s+is ).*=' };
      Three = @{ Select = '(?<=Verify\sa).*(?=value\sof)'};
-     #Four = @{ Select = 'registry key exists and the([\s\S]*?)value'; Group = 1 };
+     Four = @{ Select = 'registry key exists and the([\s\S]*?)value'; Group = 1 };
      Five = @{ Select = '(?<={0}`" is set to ).*`"'};
-     #Six = @{ Select = '((hkcu|hklm).*\sis\s(.*)=)'; Group = 3 };
+     Six = @{ Select = '((hkcu|hklm).*\sis\s(.*)=)'; Group = 3 };
      #Seven = @{ Select = 'does not exist, this is not a finding'; Return = 'Does Not Exist'}
      }
 
 $SingleLineRegistryValueData = 
      [ordered]@{
-     One = @{ Select = '(?<={0}(\s*)?=).*(?=(,|\())' };
+     One = @{ Select = '(?<={0})(\s*)?=.*(?=(,|\())'};   #'(?<={0}(\s*)?=).*(?=(,|\())' };
      Two = @{ Select = '((?<=value\sof).*(?=for))' };
      Three = @{ Select = '((?<=set\sto).*(?=\(true\)))' };
      Four = @{ Select = "((?<=is\sset\sto\s)(`'|`")).*(?=(`'|`"))" };
