@@ -190,7 +190,7 @@ function Split-StigXccdf
         Get-StigRuleList determines what type of STIG setting is being processed and sends it to a
         specalized function for additional processing.
     .DESCRIPTION
-        Get-StigRuleList pre-sorts the STIG rules that is recieves and tries to determine what type
+        Get-StigRuleList pre-sorts the STIG rules that is receives and tries to determine what type
         of object it should create. For example if the check content has the string HKEY, it assumes
         that the setting is a registry object and sends the check to the registry sub functions to
         further break down the string into a registry object.
